@@ -28,5 +28,6 @@ struct server {
 
 struct server server_initialise(uint16_t port);
 filedescriptor_t server_accept_client(struct server *server);
+void free_server(struct server *server);
 
 #endif //UNIGS_SERVER_SERVER_

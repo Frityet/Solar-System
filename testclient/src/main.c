@@ -17,7 +17,7 @@ int main()
     struct addrinfo hint = {0};
     hint.ai_family = AF_INET;
     hint.ai_socktype = SOCK_STREAM;
-    int addrinfo_res = getaddrinfo("localhost", "8123", &hint, &client.address_info);
+    int addrinfo_res = getaddrinfo("localhost", "32768", &hint, &client.address_info);
     if (addrinfo_res != 0) {
         LOG_FATAL("Could not get address info!\nReason: %s", gai_strerror(addrinfo_res));
         return addrinfo_res;

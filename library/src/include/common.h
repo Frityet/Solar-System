@@ -85,7 +85,7 @@ extern int errno;
 #define _STRMACRO(_macro) #_macro
 #define STRMACRO(_macro) _STRMACRO(_macro)
 
-#define LINE_AND_FILE __LINE__, STRMACRO(__FILE__)
+#define LINE_AND_FILE __LINE__, __FILE__
 
 #define local static
 

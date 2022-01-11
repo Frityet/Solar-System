@@ -13,7 +13,7 @@ void *alloc_or_kablooey(size_t size, int line, const char *file)
     if (alloc == NULL) {
         char buf[4096];
         sprintf(buf, "[%s: %d] Could not allocate %zu bytes of memory!\nReason: %s", file, line, size, strerror(errno));
-        logbase(buf, LOG_COLOUR_FATAL, stderr);
+        logbase(buf, line, file, LOG_COLOUR_FATAL, stderr);
         exit(EXIT_FAILURE);
     }
     return alloc;

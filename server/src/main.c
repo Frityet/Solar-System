@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <pthread.h>
-
+#include <unistd.h>
 #include <logger.h>
 #include <server.h>
 
@@ -12,11 +12,22 @@ local void *networking_thread(void *arg)
     UNUSED(arg);
     LOG_INFO("Started networking thread");
 
-    struct server server = server_initialise(8193);
+    struct server server = server_initialise(32768);
+
+    if (server.socket == 0) {
+        LOG_FATAL("Server initialisation failed!");
+        pthread_exit(NULL);
+    }
 
     while (server_accept_client(&server)) {
         LOG_INFO("Client connected!");
+
+        char input = getchar();
+        if (input == 'q')
+            break;
     }
+
+    close(server.socket);
 
     return NULL;
 }
