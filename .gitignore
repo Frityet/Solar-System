@@ -1,0 +1,12 @@
+# Xmake cache
+.xmake/
+build/
+
+# MacOS Cache
+.DS_Store
+
+CMakeLists.txt
+.idea
+
+# Project exclude paths
+/cmake-build-debug/
