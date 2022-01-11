@@ -1,10 +1,8 @@
 #include <stdlib.h>
 #include <pthread.h>
+
 #include <logger.h>
-
-
-
-#include "server.h"
+#include <server.h>
 
 local pthread_t network_thread;
 

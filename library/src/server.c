@@ -13,6 +13,8 @@ extern int errno;
 #include <logger.h>
 #include <utilities.h>
 
+#include <lua.h>
+
 
 struct server server_initialise(uint16_t portnumber)
 {
