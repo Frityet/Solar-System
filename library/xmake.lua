@@ -14,6 +14,7 @@
 ---@field set_project       function
 ---@field set_version       function
 ---@field set_config        function
+---@field add_defines       function
 
 
 
@@ -25,5 +26,6 @@ do
     add_includedirs("src", "src/include", { public = true })
     add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb")
     add_packages("lua")
+    add_defines("UNIGS_DEBUG")
 end
 target_end()

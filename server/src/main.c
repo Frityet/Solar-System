@@ -27,7 +27,6 @@ local void cmd_interpreter(void)
 }
 
 
-
 int main(int argc, char **argv)
 {
     (void)argc;

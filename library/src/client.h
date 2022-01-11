@@ -11,7 +11,7 @@
 
 struct client {
     ipv4_t              address;
-    struct addrinfo     address_info;
+    struct addrinfo     *address_info;
     filedescriptor_t    socket;
     uint64_t            guid;
     time_t              connection_time;

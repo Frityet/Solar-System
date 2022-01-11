@@ -94,4 +94,6 @@ extern int errno;
 typedef uint8_t byte_t;
 typedef int32_t filedescriptor_t;
 
+#define EMPTY(_type) (_type){0}
+
 #endif //UNIGS_SERVER_COMMON_
