@@ -8,12 +8,19 @@
 extern int errno;
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include <logger.h>
 #include <utilities.h>
-#include <unistd.h>
 
-#include "client.h"
+local void sigchild_handler(int sig)
+{
+    (void)sig;
+    int err = errno;
+    while(waitpid(-1, NULL, WNOHANG) > 0);
+    errno = err;
+}
 
 struct server server_initialise(uint16_t portnumber)
 {
@@ -68,7 +75,16 @@ struct server server_initialise(uint16_t portnumber)
     }
 
 
-    struct sigaction action;
+    struct sigaction sig;
+    sig.sa_handler = sigchild_handler;
+    sigemptyset(&sig.sa_mask);
+    sig.sa_flags = SA_RESTART;
+    if (sigaction(SIGCHLD, &sig, NULL) == -1) {
+        LOG_ERROR("Sigaction failed!\n"
+                  "Reason: %s", strerror(errno));
+        return EMPTY(struct server);
+    }
+
     return server;
 }
 
@@ -80,8 +96,10 @@ void free_server(struct server *server)
 
 filedescriptor_t server_accept_client(struct server *server)
 {
-    struct sockaddr *client_addr;
+    struct sockaddr *client_addr = NULL;
     uint32_t len = sizeof(client_addr);
     LOG_INFO("Waiting for connection!");
-    filedescriptor_t sock = accept(server->socket, )
+    filedescriptor_t sock = accept(server->socket, client_addr, &len);
+
+    return sock;
 }

@@ -5,9 +5,10 @@
 #ifndef UNIGS_SERVER_CLIENT_
 #define UNIGS_SERVER_CLIENT_
 
-#include "common.h"
-
 #include <time.h>
+
+#include "unigs_types.h"
+#include "ipv4.h"
 
 struct client {
     ipv4_t              address;

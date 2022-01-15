@@ -1,29 +1,21 @@
 //
-// Created by Frityet on 2021-12-31.
+// Created by Frityet on 2022-01-13.
 //
 
-#ifndef UNIGS_SERVER_COMMON_
-#define UNIGS_SERVER_COMMON_
+#ifndef UNIGS_COMMON_
+#define UNIGS_COMMON_
 
-
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
-#include <stdint.h>
 #include <errno.h>
 extern int errno;
 
-#include "ipv4.h"
+#define local static
 
-#ifdef HOST_OS
-    #undef HOST_OS
-#endif
+#define LINE_AND_FILE __LINE__, __FILE__
 
-#if defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
-    #define HOST_OS     LINUX
-#elif defined(__APPLE__) && defined(__MACH__)
-    #define HOST_OS     MACOS
-#elif defined(_WIN32) || defined(_WIN64)
-    #define HOST_OS     WINDOWS
-#endif
+#define NEW(_type) alloc_or_kablooey(sizeof(_type), LINE_AND_FILE)
 
 /* va_args_count. https://github.com/donmccaughey/va_args_count
  Copyright (c) 2014, Don McCaughey. All rights reserved.
@@ -78,21 +70,15 @@ extern int errno;
 
 /* END */
 
-#define ATTRIBUTE(_args) __attribute__((_args))
+__attribute__((malloc, unused))
+static void *alloc_or_kablooey(size_t size, int line, const char *file)
+{
+    void *alloc = malloc(size);
+    if (alloc == NULL) {
+        fprintf(stderr, "[%s:%d] Could not allocate %zu bytes of memory!\nReason: %s", file, line, size, strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    return alloc;
+}
 
-#define IPV4_ADDRESS(_byte0, _byte1, _byte2, _byte3, _port) (ipv4_t) { .address = { (_byte0), (_byte1), (_byte2), (_byte3) }, .port = (_port) }
-
-#define _STRMACRO(_macro) #_macro
-#define STRMACRO(_macro) _STRMACRO(_macro)
-
-#define LINE_AND_FILE __LINE__, __FILE__
-
-#define local static
-
-#define UNUSED(_var) (void)_var
-
-
-
-#define EMPTY(_type) (_type){0}
-
-#endif //UNIGS_SERVER_COMMON_
+#endif //UNIGS_COMMON_

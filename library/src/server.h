@@ -7,10 +7,10 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <common.h>
 #include <netdb.h>
 #include <stdbool.h>
 
+#include "ipv4.h"
 #include "packet.h"
 #include "client.h"
 
@@ -23,11 +23,11 @@ struct server {
     uint32_t            player_count, max_players;
     struct addrinfo     *server_info;
     struct client_list  connected_players;
-    filedescriptor_t    socket;
+    int                 socket;
 };
 
 struct server server_initialise(uint16_t port);
-filedescriptor_t server_accept_client(struct server *server);
+int server_accept_client(struct server *server);
 void free_server(struct server *server);
 
 #endif //UNIGS_SERVER_SERVER_
