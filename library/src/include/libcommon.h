@@ -5,14 +5,13 @@
 #ifndef UNIGS_SERVER_UTILITIES_
 #define UNIGS_SERVER_UTILITIES_
 
-#include "common.h"
+#include <common.h>
 #include <netdb.h>
 
-#define NEW(_type) alloc_or_kablooey(sizeof(_type), LINE_AND_FILE)
-
-ATTRIBUTE(malloc)
-void *alloc_or_kablooey(size_t size, int line, const char *file);
+#define IPV4_ADDRESS(_byte0, _byte1, _byte2, _byte3, _port) (ipv4_t) { .address = { (_byte0), (_byte1), (_byte2), (_byte3) }, .port = (_port) }
 
 char *int_to_str(int64_t num);
+
+typedef int filedescriptor_t;
 
 #endif //UNIGS_SERVER_UTILITIES_

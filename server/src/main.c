@@ -4,7 +4,7 @@
 
 #include <server.h>
 
-#include "jobs.h"
+#include <jobs.h>
 
 #define local static
 
@@ -43,17 +43,22 @@ local void cmd_interpreter(void)
 
 __attribute__((unused)) local void func1(struct job_args *args)
 {
-    printf("Thread 1: argc: %zu\n", args->argc);
+    printf("Thread: argc: %zu\n", args->argc);
 }
 
 __attribute__((unused)) local void func2(struct job_args *args)
 {
-    printf("Thread 2: argc: %zu\n", args->argc);
+    printf("Thread: argc: %zu\n", args->argc);
 }
 
 __attribute__((unused)) local void func3(struct job_args *args)
 {
-    printf("Thread 3: argc: %zu\n", args->argc);
+    printf("Thread: argc: %zu\n", args->argc);
+}
+
+__attribute__((unused)) local void func4(struct job_args *args)
+{
+    printf("Thread: argc: %zu\n", args->argc);
 }
 
 int main(int argc, char *argv[])
@@ -64,20 +69,16 @@ int main(int argc, char *argv[])
     (void)cmd_interpreter;
     (void)network_thread;
 
-    int *array = malloc(3);
+    int i = 0, j = 0, k = 0;
 
-    for (int i = 0; i < 0xFF; ++i) {
-        printf("address: %p, value: %c\n", (void *)&array[i], array[i]);
-    }
+    struct worker *worker = employ_worker(func1, JOB_ARGS(&i, &j, &k), NULL, NULL);
+    add_job(worker, func2, JOB_ARGS("Hello ", "World!"), NULL);
+    add_job(worker, func3, JOB_ARGS("Test", "argument!", &i, &j, &k), NULL);
+    add_job(worker, func4, JOB_ARGS("Multithreading", "is", "hard!"), NULL);
 
-//    int i = 0, j = 0, k = 0;
-//
-//    struct worker *worker = employ_worker(func1, JOB_ARGS(&i, &j, &k), NULL, NULL);
-//    add_job(worker, func2, JOB_ARGS("Hello ", "World!"), NULL);
-//    add_job(worker, func3, JOB_ARGS("Test", "argument!", &i, &j, &k), NULL);
-//    run_worker(worker);
-//    puts("Worker running");
-//    layoff_worker(worker);
-//
-//    pthread_exit(NULL);
+    run_worker(worker);
+    puts("Worker running");
+    layoff_worker(worker);
+
+    pthread_exit(NULL);
 }

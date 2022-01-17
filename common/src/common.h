@@ -15,8 +15,6 @@ extern int errno;
 
 #define LINE_AND_FILE __LINE__, __FILE__
 
-#define NEW(_type) alloc_or_kablooey(sizeof(_type), LINE_AND_FILE)
-
 /* va_args_count. https://github.com/donmccaughey/va_args_count
  Copyright (c) 2014, Don McCaughey. All rights reserved.
  Redistribution and use in source and binary forms, with or without
@@ -27,7 +25,8 @@ extern int errno;
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ TO, THE
  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
@@ -70,7 +69,16 @@ extern int errno;
 
 /* END */
 
-__attribute__((malloc, unused))
+#define ATTRIBUTE(...) __attribute__((__VA_ARGS__))
+
+#define _STRMACRO(_macro) #_macro
+#define STRMACRO(_macro) _STRMACRO(_macro)
+
+#define EMPTY(_type) (_type){0}
+
+#define NEW(_type) alloc_or_kablooey(sizeof(_type), LINE_AND_FILE)
+
+ATTRIBUTE(malloc, unused)
 static void *alloc_or_kablooey(size_t size, int line, const char *file)
 {
     void *alloc = malloc(size);
@@ -80,5 +88,6 @@ static void *alloc_or_kablooey(size_t size, int line, const char *file)
     }
     return alloc;
 }
+
 
 #endif //UNIGS_COMMON_

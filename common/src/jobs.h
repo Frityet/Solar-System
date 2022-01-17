@@ -5,7 +5,7 @@
 #ifndef UNIGS_JOBS_
 #define UNIGS_JOBS_
 
-#include <common.h>
+#include "common.h"
 
 #include <pthread.h>
 
@@ -43,7 +43,7 @@ struct worker {
 };
 
 
-struct job *enumerate_jobs(struct worker *worker);
+//struct job *enumerate_jobs(struct worker *worker);
 struct worker *employ_worker(job_f              *func,
                              struct job_args    args,
                              job_complete_f     *job_complete,

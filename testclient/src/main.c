@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include <utilities.h>
+#include <include/libcommon.h>
 #define UNIGS_DEBUG
-#include <logger.h>
+#include <include/logger.h>
 
 int main()
 {

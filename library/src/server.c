@@ -12,7 +12,7 @@ extern int errno;
 #include <unistd.h>
 
 #include <logger.h>
-#include <utilities.h>
+#include <libcommon.h>
 
 local void sigchild_handler(int sig)
 {
@@ -97,7 +97,7 @@ void free_server(struct server *server)
 filedescriptor_t server_accept_client(struct server *server)
 {
     struct sockaddr *client_addr = NULL;
-    uint32_t len = sizeof(client_addr);
+    uint32_t len = sizeof(*client_addr);
     LOG_INFO("Waiting for connection!");
     filedescriptor_t sock = accept(server->socket, client_addr, &len);
 

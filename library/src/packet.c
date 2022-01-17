@@ -4,7 +4,7 @@
 
 #include "packet.h"
 
-#include <utilities.h>
+#include <libcommon.h>
 
 struct packet *add_packet(struct packet_list *list, byte_t *data, size_t data_size)
 {
