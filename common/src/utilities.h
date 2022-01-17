@@ -15,6 +15,10 @@ extern int errno;
 
 #define LINE_AND_FILE __LINE__, __FILE__
 
+#ifndef __cplusplus
+const void *nullptr = NULL;
+#endif
+
 /* va_args_count. https://github.com/donmccaughey/va_args_count
  Copyright (c) 2014, Don McCaughey. All rights reserved.
  Redistribution and use in source and binary forms, with or without

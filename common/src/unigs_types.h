@@ -18,6 +18,10 @@ typedef uint8_t     byte_t;
  */
 typedef int32_t     filedescriptor_t;
 
+/**
+ * String - const char pointer
+ */
+typedef const char  *string_t;
 
 /**
  * Unicode string - unsigned int32 pointer
@@ -25,13 +29,20 @@ typedef int32_t     filedescriptor_t;
 typedef uint32_t    *ustring_t;
 
 #ifdef bool
-#undef bool
+    #undef bool
 #endif
+#ifdef true
+    #undef true
+#endif
+#ifdef false
+    #undef false
+#endif
+
 /**
  * Bool, but a typedef
  */
-typedef enum { TRUE = 1, FALSE = 0 } bool;
+typedef enum { TRUE = (_Bool)1, FALSE = (_Bool)0, true = (_Bool)1, false = (_Bool)0 } bool;
 
-#define atomic _Atomic
+#define ATOMIC _Atomic
 
 #endif //UNIGS_UNIGS_TYPES_

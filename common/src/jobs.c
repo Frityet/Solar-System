@@ -101,18 +101,19 @@ struct worker *employ_worker(job_f              *func,
 
 void *worker_thread(struct worker *worker)
 {
-    while (!worker)
-    ENUMERATE_JOBS(job, worker) {
-        job_f *func = job->function;
-        func(&job->args);
-        if (job->on_complete != NULL)
-            job->on_complete(worker, job);
-        remove_job(worker);
-        free(job);
-    }
+    while (!worker->done) {
+        ENUMERATE_JOBS(job, worker) {
+            job_f *func = job->function;
+            func(&job->args);
+            if (job->on_complete != NULL)
+                job->on_complete(worker, job);
+            remove_job(worker);
+            free(job);
+        }
 
-    if (worker->on_work_complete != NULL)
-        worker->on_work_complete(worker);
+        if (worker->on_work_complete != NULL)
+            worker->on_work_complete(worker);
+    }
 
     worker->running = FALSE;
 

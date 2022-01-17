@@ -37,7 +37,7 @@ struct job {
 struct worker {
     pthread_t       thread;
     struct job      *jobs;
-    atomic size_t   job_count;
+    ATOMIC size_t   job_count;
     bool            running, done;
     work_complete_f *on_work_complete;
 };
@@ -61,6 +61,7 @@ static inline void wait_for_worker(struct worker *worker)
 }
 static inline void layoff_worker(struct worker *worker)
 {
+    worker->done = TRUE;
     wait_for_worker(worker);
     free(worker);
 }

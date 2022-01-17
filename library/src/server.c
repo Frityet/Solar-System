@@ -1,104 +1,120 @@
 //
-// Created by Frityet on 2021-12-31.
+// Created by Frityet on 2022-01-16.
 //
 
 #include "server.h"
 
-#include <errno.h>
-extern int errno;
-#include <string.h>
-#include <stdlib.h>
-#include <signal.h>
+#include <stdio.h>
+#include <netdb.h>
 #include <unistd.h>
 
-#include <common.h>
+#include <logger.h>
+#include <signal.h>
+#include <arpa/inet.h>
 
-local void sigchild_handler(int sig)
+//#define ENUMERATE_ADDRINFO(_name, _addrinfo) for ()
+
+local void sigchild_handler(ATTRIBUTE(unused) int n)
 {
-    (void)sig;
-    int err = errno;
+    int saved_errno = errno;
+
     while(waitpid(-1, NULL, WNOHANG) > 0);
-    errno = err;
+
+    errno = saved_errno;
 }
 
-struct server server_initialise(uint16_t portnumber)
+local void *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET) {
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    }
+
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
+struct server create_server(uint16_t port)
 {
     struct server server = {0};
+    char portstr[5] = {0};
+    snprintf(portstr, 4, "%hu", port);
 
-    char port[5] = {0};
-    snprintf(port, 5, "%d", portnumber);
+    struct addrinfo hint = {0}, *addrinfo = NULL;
+    hint.ai_family = AF_INET;
+    hint.ai_socktype = SOCK_STREAM;
+    hint.ai_flags = AI_PASSIVE;
 
-    struct addrinfo hint = {0};
-    hint.ai_family =    AF_INET;
-    hint.ai_socktype =  SOCK_STREAM;
-    hint.ai_flags =     AI_PASSIVE;
-
-    int addrinfo_res = getaddrinfo("localhost", port, &hint, &(server.server_info));
-    if (addrinfo_res != 0) {
-        LOG_ERROR("Could not start server!\n"
-                  "Error: %s", gai_strerror(addrinfo_res));
+    int addrinfo_status = 0;
+    if ((addrinfo_status = getaddrinfo("localhost", portstr, &hint, &server.address_info)) != 0) {
+        LOG_ERROR("Could not get address info!\nReason: %s", gai_strerror(addrinfo_status));
         return EMPTY(struct server);
     }
 
-    struct addrinfo *addr = NULL;
-    for (addr = server.server_info; addr != NULL; addr = addr->ai_next) {
-        if ((server.socket = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol) == -1)) {
-            LOG_DEBUG("Address %s: %s", addr->ai_canonname, strerror(errno));
+    int yes = 1;
+    for (struct addrinfo *node = server.address_info; addrinfo != NULL; addrinfo = addrinfo->ai_next) {
+        server.socket = socket(node->ai_family, node->ai_socktype, node->ai_protocol);
+        if (server.socket == -1) {
+            LOG_WARNING("Could not bind socket!\nReason: %s", strerror(errno));
             continue;
         }
 
-        int sockopt_res = 1;
-        if (setsockopt(server.socket, SOL_SOCKET, SO_REUSEADDR, &sockopt_res, sizeof(int)) == -1) {
-            LOG_ERROR("setsockopt failed!\n"
-                      "Reason: %s", strerror(errno));
-            return EMPTY(struct server);
+        if (setsockopt(server.socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+            LOG_FATAL("Could not set socket option!\nReason: %s", strerror(errno));
+            exit(EXIT_FAILURE);
         }
 
-        if (bind(server.socket, addr->ai_addr, addr->ai_addrlen) == -1) {
-            LOG_DEBUG("Bind failed to addr %s (%s)", addr->ai_canonname, strerror(errno));
+        if (bind(server.socket, node->ai_addr, node->ai_addrlen) == -1) {
+            LOG_FATAL("Could not bind port!\nReason: %s", strerror(errno));
+            close(server.socket);
             continue;
         }
+
         break;
     }
 
-    if (addr == NULL) {
-        LOG_ERROR("Bind failed!\n"
-                  "Reason: %s", strerror(errno));
-        return EMPTY(struct server);
-    }
-
-    if (listen(server.socket, SERVER_MAX_QUEUE) == -1) {
-        LOG_ERROR("Listen failed!\n"
-                  "Reason: %s", strerror(errno));
-        return EMPTY(struct server);
-    }
-
-
-    struct sigaction sig;
+    struct sigaction sig = {0};
     sig.sa_handler = sigchild_handler;
     sigemptyset(&sig.sa_mask);
     sig.sa_flags = SA_RESTART;
+
     if (sigaction(SIGCHLD, &sig, NULL) == -1) {
-        LOG_ERROR("Sigaction failed!\n"
-                  "Reason: %s", strerror(errno));
-        return EMPTY(struct server);
+        LOG_FATAL("Could not execute sigaction!\nReason: %s", strerror(errno));
+        exit(EXIT_FAILURE);
     }
 
     return server;
 }
 
-void free_server(struct server *server)
+struct client *wait_for_connection(struct server *server)
 {
-    freeaddrinfo(server->server_info);
-    free(server);
+    struct sockaddr client_address;
+    socklen_t clientaddr_size = sizeof(client_address);
+    char buffer[INET_ADDRSTRLEN];
+
+    filedescriptor_t socket;
+
+    while (true) {
+        socket = accept(server->socket, &client_address, &clientaddr_size);
+
+        if (socket == -1) {
+            LOG_DEBUG("No connection!\nError: %s", strerror(errno));
+            continue;
+        }
+        break;
+    }
+
+    inet_ntop(client_address.sa_family, get_in_addr(&client_address), buffer, sizeof(buffer));
+    LOG_DEBUG("%s connected", buffer);
+
+    if (send(socket, "Ping", 5, 0) == -1) {
+        LOG_ERROR("Could not send ping message!\nReason: %s", strerror(errno));
+    }
+
+    return add_client(&server->connected_clients, socket);
 }
 
-filedescriptor_t server_accept_client(struct server *server)
+void free_server(struct server *server)
 {
-    struct sockaddr *client_addr = NULL;
-    uint32_t len = sizeof(*client_addr);
-    LOG_INFO("Waiting for connection!");
-    filedescriptor_t sock = accept(server->socket, client_addr, &len);
-
-    return sock;
+    free_clientlist(&server->connected_clients);
+    close(server->socket);
+    freeaddrinfo(server->address_info);
 }
