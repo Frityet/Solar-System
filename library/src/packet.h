@@ -5,7 +5,7 @@
 #ifndef UNIGS_SERVER_PACKET_
 #define UNIGS_SERVER_PACKET_
 
-#include "unigs_types.h"
+#include <common.h>
 
 struct packet {
     byte_t          *data;

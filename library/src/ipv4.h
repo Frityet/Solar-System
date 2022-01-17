@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <netdb.h>
 
+#define IPV4_ADDRESS(_byte0, _byte1, _byte2, _byte3, _port) (ipv4_t) { .address = { (_byte0), (_byte1), (_byte2), (_byte3) }, .port = (_port) }
 typedef struct ipv4 {
     union {
         struct {

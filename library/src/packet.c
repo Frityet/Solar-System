@@ -4,7 +4,9 @@
 
 #include "packet.h"
 
-#include <libcommon.h>
+#include <common.h>
+#include <unigs_types.h>
+
 
 struct packet *add_packet(struct packet_list *list, byte_t *data, size_t data_size)
 {

@@ -9,7 +9,7 @@
 
 #include <pthread.h>
 
-#include <unigs_types.h>
+#include "unigs_types.h"
 
 struct worker;
 struct job;
@@ -38,7 +38,7 @@ struct worker {
     pthread_t       thread;
     struct job      *jobs;
     atomic size_t   job_count;
-    bool            running;
+    bool            running, done;
     work_complete_f *on_work_complete;
 };
 

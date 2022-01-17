@@ -4,7 +4,7 @@
 
 #include "client.h"
 
-#include <libcommon.h>
+#include <common.h>
 #include <stdlib.h>
 #include <unistd.h>
 

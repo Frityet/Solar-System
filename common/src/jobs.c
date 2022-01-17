@@ -40,16 +40,19 @@ struct job *add_job(struct worker   *worker,
                     struct job_args args,
                     job_complete_f  *on_complete)
 {
+    if (worker->jobs == NULL) {
+        worker->jobs = create_job(worker, func, args, on_complete);
+        return worker->jobs;
+    }
+
     struct job *latest = NULL;
 
 
-     ENUMERATE_JOBS(tmp, worker) {
+    ENUMERATE_JOBS(tmp, worker) {
         latest = tmp;
     }
 
     if (latest == NULL) {
-        fprintf(stderr, "done fucked up again!\n");
-        exit(EXIT_FAILURE);
     }
     latest->next_job = create_job(worker, func, args, on_complete);
     worker->job_count++;
@@ -91,14 +94,14 @@ struct worker *employ_worker(job_f              *func,
     worker->job_count++;
     worker->on_work_complete    = work_complete;
     worker->running             = FALSE;
+    worker->done                = FALSE;
 
     return worker;
 }
 
 void *worker_thread(struct worker *worker)
 {
-//    struct job *job = NULL;
-//    while((job = enumerate_jobs(worker))) {
+    while (!worker)
     ENUMERATE_JOBS(job, worker) {
         job_f *func = job->function;
         func(&job->args);

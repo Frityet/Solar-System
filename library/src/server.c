@@ -11,8 +11,7 @@ extern int errno;
 #include <signal.h>
 #include <unistd.h>
 
-#include <logger.h>
-#include <libcommon.h>
+#include <common.h>
 
 local void sigchild_handler(int sig)
 {

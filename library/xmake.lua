@@ -28,5 +28,6 @@ do
     add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb")
     add_packages("lua")
     add_defines("UNIGS_DEBUG")
+    add_deps("unigscommon")
 end
 target_end()

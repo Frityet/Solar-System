@@ -18,7 +18,7 @@
 
 
 
-target("unigs")
+target("unigscommon")
 do
     set_kind("static")
     add_files("src/**.c")
