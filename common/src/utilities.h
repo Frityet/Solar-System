@@ -16,7 +16,7 @@ extern int errno;
 #define LINE_AND_FILE __LINE__, __FILE__
 
 #ifndef __cplusplus
-const void *nullptr = NULL;
+static const void *nullptr = NULL;
 #endif
 
 /* va_args_count. https://github.com/donmccaughey/va_args_count
@@ -80,7 +80,7 @@ const void *nullptr = NULL;
 
 #define EMPTY(_type) (_type){0}
 
-#define NEW(_type) alloc_or_kablooey(sizeof(_type), LINE_AND_FILE)
+#define NEW(_type) memset(alloc_or_kablooey(sizeof(_type), LINE_AND_FILE), 0, sizeof(_type))
 
 ATTRIBUTE(malloc, unused)
 static void *alloc_or_kablooey(size_t size, int line, const char *file)
@@ -91,6 +91,19 @@ static void *alloc_or_kablooey(size_t size, int line, const char *file)
         exit(EXIT_FAILURE);
     }
     return alloc;
+}
+
+static inline uint32_t round_to_2nd_power(uint32_t num)
+{
+    num--;
+    num |= num >> 1;
+    num |= num >> 2;
+    num |= num >> 4;
+    num |= num >> 8;
+    num |= num >> 16;
+    num++;
+
+    return num;
 }
 
 #endif //UNIGS_UTILITIES_

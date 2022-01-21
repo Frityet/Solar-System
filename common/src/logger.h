@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "common.h"
+#include "utilities.h"
 
 enum log_colour {
     LOG_COLOUR_INFO,

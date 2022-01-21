@@ -15,5 +15,6 @@ extern int errno;
 #include "unigs_types.h"
 #include "utilities.h"
 #include "logger.h"
+#include "list.h"
 
 #endif //UNIGS_COMMON_

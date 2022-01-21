@@ -21,7 +21,6 @@ do
     add_files("src/**.c")
     add_headerfiles("src/**.h")
     add_includedirs("src", "src/include")
-    add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb")
     add_deps("unigscommon")
 end
 target_end()

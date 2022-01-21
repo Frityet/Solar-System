@@ -34,7 +34,12 @@ local void *get_in_addr(struct sockaddr *sa)
 
 struct server create_server(uint16_t port)
 {
-    struct server server = {0};
+    struct server server = {
+        .connected_clients = create_clientlist(),
+        .port = port,
+        .connected_client_count = 0
+    };
+
     char portstr[5] = {0};
     snprintf(portstr, 4, "%hu", port);
 
@@ -84,17 +89,18 @@ struct server create_server(uint16_t port)
     return server;
 }
 
+
+
 struct client *wait_for_connection(struct server *server)
 {
     struct sockaddr client_address;
     socklen_t clientaddr_size = sizeof(client_address);
     char buffer[INET_ADDRSTRLEN];
-
     filedescriptor_t socket;
 
+    puts("Waiting for connection...");
     while (true) {
         socket = accept(server->socket, &client_address, &clientaddr_size);
-
         if (socket == -1) {
             LOG_DEBUG("No connection!\nError: %s", strerror(errno));
             continue;

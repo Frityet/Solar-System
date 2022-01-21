@@ -25,7 +25,7 @@ do
     add_headerfiles("src/**.h")
     add_includedirs("src", { public = true })
     add_includedirs("src/include")
-    add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb")
+    --add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb")
     add_packages("lua")
     add_defines("UNIGS_DEBUG")
     add_deps("unigscommon")

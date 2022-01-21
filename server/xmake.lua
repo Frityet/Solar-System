@@ -22,7 +22,7 @@ do
     add_files("src/**.c")
     add_headerfiles("src/**.h")
     add_includedirs("src", "src/include")
-    add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-Og", "-ggdb")
+    --add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-Og", "-ggdb")
     add_deps("unigs")
 end
 target_end()

@@ -42,7 +42,7 @@ void logbase(const char *msg, int line, const char *file, enum log_colour log_co
 void initalise_logger(char *file)
 {
     FILE *tmp = fopen(file, "w");
-    if (!tmp) {
+    if (tmp == NULL) {
         LOG_ERROR("Could not create logger file at %s!\n", file);
     }
     filename = file;

@@ -22,10 +22,12 @@ set_version("1.0.0")
 add_rules("mode.debug", "mode.release")
 
 dependencies = {
-     "lua"
+     "protobuf-c"
 };
 
 add_requires(dependencies)
 add_packages(dependencies)
+
+add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb")
 
 includes("library", "server", "testclient", "common")

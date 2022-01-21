@@ -9,18 +9,18 @@
 
 struct client {
     filedescriptor_t    socket;
-    size_t              id;
-    struct client       *next_client;
 };
 
 struct client_list {
-    size_t          client_count;
-    struct client   *head;
+    size_t          client_count, free_spaces;
+    struct client   *list;
 };
 
-struct client_list *create_clientlist(filedescriptor_t socket);
+
+
+struct client_list create_clientlist(void);
 struct client *add_client(struct client_list *list, filedescriptor_t socket);
-void remove_client(struct client_list *list, int index);
+void remove_client(struct client_list *list, size_t index);
 void free_clientlist(struct client_list *list);
 
 #endif //UNIGS_CLIENT_
