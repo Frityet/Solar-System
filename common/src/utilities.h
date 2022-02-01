@@ -2,8 +2,8 @@
 // Created by Frityet on 2022-01-16.
 //
 
-#ifndef UNIGS_UTILITIES_
-#define UNIGS_UTILITIES_
+#ifndef SOLARSYSTEM_COMMON_UTILITIES_
+#define SOLARSYSTEM_COMMON_UTILITIES_
 
 #include <string.h>
 #include <stdio.h>
@@ -106,4 +106,4 @@ static inline uint32_t round_to_2nd_power(uint32_t num)
     return num;
 }
 
-#endif //UNIGS_UTILITIES_
+#endif //SOLARSYSTEM_COMMON_UTILITIES_

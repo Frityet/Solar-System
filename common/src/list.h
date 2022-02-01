@@ -2,15 +2,16 @@
 // Created by Frityet on 2022-01-17.
 //
 
-#ifndef UNIGS_LIST_
-#define UNIGS_LIST_
+#ifndef SOLARSYSTEM_COMMON_LIST_
+#define SOLARSYSTEM_COMMON_LIST_
 
-#include "unigs_types.h"
+#include "solarsystem_types.h"
 
 #include "logger.h"
 
 //#define list(_type) (_type) *
 
+#define NEW_LIST(_type) create_list(sizeof(_type), 2)
 #define ADD_ITEM(_list, _item) if (listinfo(_list)->used_spaces == listinfo(_list)->total_spaces) grow_list(_list); (_list)[free_index(_list)] = _item; listinfo(_list)->used_spaces++
 
 struct list_data {
@@ -52,4 +53,4 @@ static inline void free_list(void *ptr)
     free(listinfo(ptr));
 }
 
-#endif //UNIGS_LIST_
+#endif //SOLARSYSTEM_COMMON_LIST_

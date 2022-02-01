@@ -50,17 +50,14 @@
 ---@class task
 ---@field run       function
 
-set_project("SolarSystem")
-set_version("0.1.0")
-add_rules("mode.debug", "mode.release")
 
-local DEPENDENCIES<const> = {
-     "protobuf-c",
-};
+target("solarsystem-spacestation")
+do
+    set_kind("static")
+    add_files("src/**.c")
+    add_headerfiles("src/**.h")
+    add_includedirs("src/", "src/include/")
+    add_deps("solarsystem-common")
+end
+target_end()
 
-add_requires(DEPENDENCIES)
-
-add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb", "-Og")
-add_defines("SOLARSYSTEM_COMMON_DEBUG")
-
-includes("spacestation", "satellite", "common", "test")

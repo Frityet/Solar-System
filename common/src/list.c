@@ -4,7 +4,7 @@
 
 #include "list.h"
 
-#include <utilities.h>
+#include "utilities.h"
 
 
 void *create_list(size_t type_size, size_t count)
@@ -37,6 +37,8 @@ void *remove_item(void *ptr, size_t index)
     struct list_data *info = listinfo(ptr);
     uint8_t *newlist = create_list(info->type_size, info->total_spaces - 1),
             *list_array = info->array;
+
+    (void)index;
 
     for (size_t i = 0; i < info->used_spaces; ++i) {
         newlist[i] = list_array[i];

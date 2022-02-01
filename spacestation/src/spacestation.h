@@ -1,0 +1,8 @@
+//
+// Created by Frityet on 2022-02-01.
+//
+
+#ifndef SOLARSYSTEM_SPACESTATION_
+#define SOLARSYSTEM_SPACESTATION_
+
+#endif //SOLARSYSTEM_SPACESTATION_

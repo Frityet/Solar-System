@@ -2,8 +2,8 @@
 // Created by Frityet on 2021-12-20.
 //
 
-#ifndef UNIGS_SERVER_LOGGER_
-#define UNIGS_SERVER_LOGGER_
+#ifndef SOLARSYSTEM_COMMON_SERVER_LOGGER_
+#define SOLARSYSTEM_COMMON_SERVER_LOGGER_
 
 #include <stdio.h>
 
@@ -21,7 +21,7 @@ void initalise_logger(char *file);
 
 void logbase(const char *msg, int line, const char *file, enum log_colour log_colour, FILE *stream);
 
-#ifdef UNIGS_DEBUG
+#ifdef SOLARSYSTEM_COMMON_DEBUG
     #define LOG_INFO(...) { \
                         char _LOG_buf[4096]; \
                         sprintf(_LOG_buf, __VA_ARGS__);\
@@ -60,4 +60,4 @@ void logbase(const char *msg, int line, const char *file, enum log_colour log_co
 #endif
 
 
-#endif //UNIGS_SERVER_LOGGER_
+#endif //SOLARSYSTEM_COMMON_SERVER_LOGGER_

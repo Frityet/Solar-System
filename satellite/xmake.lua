@@ -38,6 +38,7 @@
 ---@field after_link        function
 ---@field print             function
 ---@field set_languages     function
+---@field add_deps          function
 
 ---@class git
 ---@field clone function
@@ -50,17 +51,16 @@
 ---@class task
 ---@field run       function
 
-set_project("SolarSystem")
-set_version("0.1.0")
-add_rules("mode.debug", "mode.release")
 
-local DEPENDENCIES<const> = {
-     "protobuf-c",
-};
+target("solarsystem-satellite")
+do
+    set_kind("static")
+    add_files("src/**.c")
+    add_headerfiles("src/**.h")
+    add_includedirs("src/", { public = true })
+    add_includedirs("src/include/", { public = false })
+    --add_packages(DEPENDENCIES)
+    add_deps("solarsystem-common")
+end
+target_end()
 
-add_requires(DEPENDENCIES)
-
-add_cflags("-Wall", "-Wextra", "-Wpedantic", "-Werror", "-ggdb", "-Og")
-add_defines("SOLARSYSTEM_COMMON_DEBUG")
-
-includes("spacestation", "satellite", "common", "test")

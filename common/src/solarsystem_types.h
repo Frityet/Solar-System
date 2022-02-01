@@ -2,15 +2,15 @@
 // Created by Frityet on 2022-01-13.
 //
 
-#ifndef UNIGS_UNIGS_TYPES_
-#define UNIGS_UNIGS_TYPES_
+#ifndef SOLARSYSTEM_COMMON_SOLARSYSTEM_COMMON_TYPES_
+#define SOLARSYSTEM_COMMON_SOLARSYSTEM_COMMON_TYPES_
 
 #include <stddef.h>
 #include <stdint.h>
 
 #define ATOMIC _Atomic
 
-#define LINKED_LIST(_type, ...) struct _type { struct _type *next; size_t id; __VA_ARGS__; }; struct _type##_list { size_t length; struct _type##_list *head; }
+//#define LINKED_LIST(_type, ...) struct _type { struct _type *next; size_t id; __VA_ARGS__; }; struct _type##_list { size_t length; struct _type##_list *head; }
 
 /**
  * Byte - unsigned char
@@ -48,4 +48,4 @@ typedef uint32_t    *ustring_t;
 typedef enum { TRUE = (_Bool)1, FALSE = (_Bool)0, true = (_Bool)1, false = (_Bool)0 } bool;
 
 
-#endif //UNIGS_UNIGS_TYPES_
+#endif //SOLARSYSTEM_COMMON_SOLARSYSTEM_COMMON_TYPES_
