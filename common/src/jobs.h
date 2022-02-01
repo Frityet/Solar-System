@@ -2,14 +2,14 @@
 // Created by Frityet on 2022-01-13.
 //
 
-#ifndef UNIGS_JOBS_
-#define UNIGS_JOBS_
+#ifndef SOLARSYSTEM_COMMON_JOBS_
+#define SOLARSYSTEM_COMMON_JOBS_
 
 #include "common.h"
 
 #include <pthread.h>
 
-#include "unigs_types.h"
+#include "solarsystem_types.h"
 
 struct worker;
 struct job;
@@ -66,4 +66,4 @@ static inline void layoff_worker(struct worker *worker)
     free(worker);
 }
 
-#endif //UNIGS_JOBS_
+#endif //SOLARSYSTEM_COMMON_JOBS_

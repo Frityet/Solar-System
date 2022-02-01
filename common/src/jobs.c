@@ -4,7 +4,7 @@
 
 #include "jobs.h"
 
-#include <common.h>
+#include "common.h"
 
 //local pthread_mutex_t jobcount_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -58,29 +58,6 @@ struct job *add_job(struct worker   *worker,
     worker->job_count++;
     return latest->next_job;
 }
-
-
-//struct job *enumerate_jobs(struct worker *worker)
-//{
-//    //"Enumerator"
-//    static size_t job_index = 0;
-//
-//    //Even if the first job is null, the enumerator won't try and access it
-//    struct job *job = worker->jobs;
-//    for (size_t i = 0; i < job_index; ++i) {
-//        job = job->next_job;
-//    }
-//    job_index++;
-//
-//    if (job == NULL) {
-//        job_index = 0;
-//        return NULL;
-//    }
-//
-//    printf("Index: %zu, ID: %zu, Address: %p\n", job_index, job->id, (void *)job);
-//
-//    return job;
-//}
 
 struct worker *employ_worker(job_f              *func,
                              struct job_args    args,
